@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import re, os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 app.secret_key = "change-this-secret-key-12345"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///friends.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
