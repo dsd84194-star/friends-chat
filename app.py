@@ -84,21 +84,6 @@ def login():
         return render_template('login.html', error="Wrong name or password")
     return render_template('login.html')
 
-@app.route('/reset-admin-secret')
-def reset_admin_secret():
-    admin = User.query.filter_by(name='admin').first()
-    if not admin:
-        # Create admin if it doesn't exist
-        admin = User(name='admin', password=generate_password_hash('RESET123'), is_admin=True, seen_intro=True)
-        db.session.add(admin)
-        db.session.commit()
-        return "Admin user CREATED with password 'RESET123'. Please log in and change it immediately!"
-    else:
-        # Reset existing admin's password
-        admin.password = generate_password_hash('RESET123')
-        admin.is_admin = True
-        db.session.commit()
-        return "Admin password RESET to 'RESET123'. Please log in and change it immediately!"
 @app.route('/logout')
 def logout():
     session.clear()
