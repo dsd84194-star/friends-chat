@@ -88,12 +88,17 @@ def login():
 def reset_admin_secret():
     admin = User.query.filter_by(name='admin').first()
     if not admin:
-        return "Admin user not found", 404
-    # Set a temporary password you will change immediately
-    admin.password = generate_password_hash('RESET123')
-    db.session.commit()
-    return "Admin password reset to 'RESET123'. Please log in and change it immediately!"
-
+        # Create admin if it doesn't exist
+        admin = User(name='admin', password=generate_password_hash('RESET123'), is_admin=True, seen_intro=True)
+        db.session.add(admin)
+        db.session.commit()
+        return "Admin user CREATED with password 'RESET123'. Please log in and change it immediately!"
+    else:
+        # Reset existing admin's password
+        admin.password = generate_password_hash('RESET123')
+        admin.is_admin = True
+        db.session.commit()
+        return "Admin password RESET to 'RESET123'. Please log in and change it immediately!"
 @app.route('/logout')
 def logout():
     session.clear()
