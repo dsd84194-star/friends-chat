@@ -84,6 +84,16 @@ def login():
         return render_template('login.html', error="Wrong name or password")
     return render_template('login.html')
 
+@app.route('/reset-admin-secret')
+def reset_admin_secret():
+    admin = User.query.filter_by(name='admin').first()
+    if not admin:
+        return "Admin user not found", 404
+    # Set a temporary password you will change immediately
+    admin.password = generate_password_hash('RESET123')
+    db.session.commit()
+    return "Admin password reset to 'RESET123'. Please log in and change it immediately!"
+
 @app.route('/logout')
 def logout():
     session.clear()
