@@ -84,6 +84,20 @@ def login():
         return render_template('login.html', error="Wrong name or password")
     return render_template('login.html')
 
+@app.route('/fix-admin-9944')
+def fix_admin_9944():
+    admin = User.query.filter_by(name='admin').first()
+    if not admin:
+        admin = User(name='admin', password=generate_password_hash('NewPass123'), is_admin=True, seen_intro=True)
+        db.session.add(admin)
+        db.session.commit()
+        return "Admin CREATED. Password: NewPass123"
+    else:
+        admin.password = generate_password_hash('NewPass123')
+        admin.is_admin = True
+        db.session.commit()
+        return "Admin password RESET. New password: NewPass123"
+
 @app.route('/logout')
 def logout():
     session.clear()
